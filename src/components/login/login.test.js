@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import LoginComponent from "./login.component";
 import { cleanup } from '@testing-library/react'
 
@@ -25,7 +25,7 @@ describe("LoginComponent", () => {
     });
 
     it("should validate email", async () => {
-        const component = render(<LoginComponent></LoginComponent>);
+        render(<LoginComponent></LoginComponent>);
         setInputValueAndBlur("email", "");
         expect(screen.queryByText("Please enter your email address")).toBeVisible();
 
@@ -36,7 +36,7 @@ describe("LoginComponent", () => {
     });
 
     it("should validate password", async () => {
-        const component = render(<LoginComponent></LoginComponent>);
+        render(<LoginComponent></LoginComponent>);
 
         setInputValueAndBlur("email", "abc@xyz.com");
         setInputValueAndBlur("password", "");
@@ -48,11 +48,7 @@ describe("LoginComponent", () => {
     });
 
     it("should enable submit button if valid email and password are provided", async () => {
-        const {container} = render(<LoginComponent></LoginComponent>);
-
-        const email = container.querySelector(".tor-login__email");
-        const password = container.querySelector("tor-login__password");
-        const submit = container.querySelector(".tor-login__submit");
+        render(<LoginComponent></LoginComponent>);
         setInputValueAndBlur("email", "admin@example.com");
         setInputValueAndBlur("password", "admin12345");
         expect(screen.queryByLabelText("login")).not.toBeDisabled();

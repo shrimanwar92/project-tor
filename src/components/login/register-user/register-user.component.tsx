@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {Box, Button, Container, Grid} from "@material-ui/core";
 import InputWithValidator, {InputValidatorResponse} from "shared/components/input-validator/input-validator.component";
 import './register-user.less';
@@ -24,11 +24,13 @@ export default function RegisterUserComponent() {
     const [formData, setFormData] = useState<RegisterUserType>(initialState);
     const [disabled, setDisabled] = useState<boolean>(false);
 
+    const isDisabled = useCallback(() => {
+        return Object.keys(formData).some((key) => (formData[key as keyof RegisterUserType]).isError);
+    }, [formData]);
+
     useEffect(() => {
         setDisabled(isDisabled);
-    }, [JSON.stringify(formData)]);
-
-    const isDisabled = () => Object.keys(formData).some((key) => (formData[key as keyof RegisterUserType]).isError);
+    }, [JSON.stringify(formData), isDisabled]);
 
     const onChangeInput = (data: InputValidatorResponse) => {
         setFormData({

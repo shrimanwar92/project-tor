@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {Container, Grid, Button, Box} from "@material-ui/core";
 import './login.less';
 import InputWithValidator, {InputValidatorResponse} from "shared/components/input-validator/input-validator.component";
@@ -22,9 +22,16 @@ export default function LoginComponent() {
     const [isShow, setIsShow] = useState<boolean>(false);
     const [state, dispatch] = useMode();
 
+    const isDisabled = useCallback(() => {
+        if(state.mode === Mode.LOGIN) {
+            return formData.email.isError || formData.password.isError;
+        }
+        return formData.email.isError;
+    }, [formData.email.isError, formData.password.isError, state.mode]);
+
     useEffect(() => {
         setDisabled(isDisabled);
-    }, [JSON.stringify(formData)]);
+    }, [JSON.stringify(formData), isDisabled]);
 
     const onChangeInput = (data: InputValidatorResponse) => {
         setFormData({
@@ -32,13 +39,6 @@ export default function LoginComponent() {
             [data.field]: {value: data.value, isError: data.isError}
         });
     };
-
-    const isDisabled = (): boolean => {
-        if(state.mode === Mode.LOGIN) {
-            return formData.email.isError || formData.password.isError;
-        }
-        return formData.email.isError;
-    }
 
     const showPassword = () => setIsShow((prevState) => !prevState);
 
