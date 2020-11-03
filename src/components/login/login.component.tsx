@@ -31,7 +31,7 @@ export default function LoginComponent() {
 
     useEffect(() => {
         setDisabled(isDisabled);
-    }, [JSON.stringify(formData), isDisabled]);
+    }, [isDisabled]);
 
     const onChangeInput = (data: InputValidatorResponse) => {
         setFormData({
@@ -136,9 +136,9 @@ export default function LoginComponent() {
     const getForm = () => {
         return(
             <form className={`tor-login__form`} noValidate>
-                <Grid container spacing={4}>
+                <Grid container spacing={3}>
                     <Grid item xs={12}>
-                        <Grid container spacing={4}>
+                        <Grid container spacing={3}>
                             {getEmailInput()}
                             {state.mode === Mode.LOGIN ? getPasswordInput() : null}
                             {state.mode === Mode.LOGIN ? getForgotPassword() : null}

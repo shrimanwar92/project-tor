@@ -30,7 +30,7 @@ export default function RegisterUserComponent() {
 
     useEffect(() => {
         setDisabled(isDisabled);
-    }, [JSON.stringify(formData), isDisabled]);
+    }, [isDisabled]);
 
     const onChangeInput = (data: InputValidatorResponse) => {
         setFormData({
