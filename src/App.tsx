@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import './App.less';
-import LoginComponent from "./components/login/login.component";
-import Header from "./shared/components/header/header.component";
-import LandingPageComponent from "./components/landing-page/landing-page.component";
-import RegisterUserComponent from "./components/login/register-user/register-user.component";
+import LoginComponent from "components/login/login.component";
+import Header from "shared/components/header/header.component";
+import LandingPageComponent from "components/landing-page/landing-page.component";
+import RegisterUserComponent from "components/login/register-user/register-user.component";
 
 function App() {
     return (

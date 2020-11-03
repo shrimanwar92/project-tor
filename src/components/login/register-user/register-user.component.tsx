@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Box, Button, Container, Grid} from "@material-ui/core";
-import InputWithValidator, {InputValidatorResponse} from "../../../shared/components/input-validator/input-validator.component";
+import InputWithValidator, {InputValidatorResponse} from "shared/components/input-validator/input-validator.component";
 import './register-user.less';
 import TextField from "@material-ui/core/TextField";
 
@@ -202,7 +202,7 @@ export default function RegisterUserComponent() {
                                 fullWidth
                                 type="submit"
                                 onClick={saveUser}
-                                className={`tor-login__submit`}
+                                className={`tor-register-user__submit`}
                                 variant="contained"
                                 disabled={disabled}
                             >

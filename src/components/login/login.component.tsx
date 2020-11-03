@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Container, Grid, Button, Box} from "@material-ui/core";
 import './login.less';
-import InputWithValidator, {InputValidatorResponse} from "../../shared/components/input-validator/input-validator.component";
+import InputWithValidator, {InputValidatorResponse} from "shared/components/input-validator/input-validator.component";
 import Link from "@material-ui/core/Link";
 import useMode, {Mode} from "./login-mode.hook";
 
@@ -107,7 +107,7 @@ export default function LoginComponent() {
 
     const getBackToLogin = () => {
         return(
-            <Grid item xs={12} className={`tor-login__back-to-login`}>
+            <Grid item xs={12} className={`${state.className}__back-to-login`}>
                 <Button aria-label={'back to login'} fullWidth variant="outlined" color="secondary" onClick={backToLogin}>
                     Back to login
                 </Button>
@@ -124,7 +124,7 @@ export default function LoginComponent() {
                     fullWidth
                     type="submit"
                     onClick={submit}
-                    className={`tor-login__submit`}
+                    className={`${state.className}__submit`}
                     variant="contained"
                     disabled={disabled}>
                     {state.buttonText}
