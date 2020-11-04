@@ -3,7 +3,7 @@ import {Container, Grid, Button, Box} from "@material-ui/core";
 import './login.less';
 import InputWithValidator, {InputValidatorResponse} from "shared/components/input-validator/input-validator.component";
 import Link from "@material-ui/core/Link";
-import useMode, {Mode} from "./login-mode.hook";
+import useMode, {Mode} from "./use-login-mode.hook";
 
 
 type FieldType = 'email' | 'password';

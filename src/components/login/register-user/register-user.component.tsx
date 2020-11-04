@@ -188,7 +188,7 @@ export default function RegisterUserComponent() {
                                         type={'password'}
                                         name={'confirmPassword'}
                                         className={'tor-register-user__confirm-password'}
-                                        aria-label={'confirmPassword'}
+                                        inputProps={{"aria-label": "confirmPassword"}}
                                         error={formData.password.value !== "" && formData.confirmPassword.isError}
                                         disabled={formData.password.value === ""}
                                         helperText={formData.password.value !== "" && formData.confirmPassword.isError ? "Password and confirm password does not match" : ""}
@@ -199,7 +199,7 @@ export default function RegisterUserComponent() {
                         </Grid>
                         <Grid item xs={12}>
                             <Button
-                                aria-label={'login'}
+                                aria-label={'submit'}
                                 color="secondary"
                                 fullWidth
                                 type="submit"
