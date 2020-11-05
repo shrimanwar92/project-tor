@@ -1,9 +1,10 @@
 import React from 'react';
-import {render, screen, fireEvent, waitFor} from '@testing-library/react';
+import {render, screen, fireEvent, cleanup} from '@testing-library/react';
 import RegisterUserComponent from "./register-user.component";
-import userEvent from "@testing-library/user-event";
 
 describe("RegisterUserComponent", () => {
+    afterEach(cleanup);
+
     const setInputValueAndBlur = (label, val) => {
         const input = screen.getByLabelText(label);
         fireEvent.focus(input);
@@ -69,7 +70,7 @@ describe("RegisterUserComponent", () => {
     });
 
     it("should validate mobile number", async () => {
-        const {container} = render(<RegisterUserComponent></RegisterUserComponent>);
+        render(<RegisterUserComponent></RegisterUserComponent>);
         setInputValueAndBlur("mobileNumber", "");
         expect(screen.queryByText("Please enter your mobile number")).toBeVisible();
         setInputValueAndBlur("mobileNumber", "1234sdsd");

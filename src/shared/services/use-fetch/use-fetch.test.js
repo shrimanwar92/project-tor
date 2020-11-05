@@ -1,11 +1,11 @@
-import React from "react";
-import { renderHook, act } from '@testing-library/react-hooks';
-import useFetch from "shared/hooks/use-fetch.hook";
+import { renderHook, cleanup } from '@testing-library/react-hooks';
+import useFetch from "shared/services/use-fetch/use-fetch.hook";
 import axios from 'axios';
 
 jest.mock('axios');
 
 describe("UseFetchHook", () => {
+    afterEach(cleanup);
 
     it("should give successful response", async () => {
         const data = {

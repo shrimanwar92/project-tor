@@ -1,9 +1,13 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import {Container, Grid, Button, Box} from "@material-ui/core";
+import React, {useCallback, useContext, useEffect, useState} from 'react';
+import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
 import './login.less';
 import InputWithValidator, {InputValidatorResponse} from "shared/components/input-validator/input-validator.component";
 import Link from "@material-ui/core/Link";
 import useMode, {Mode} from "./use-login-mode.hook";
+import {AuthContext, UserAction} from "shared/services/auth/auth-context";
 
 
 type FieldType = 'email' | 'password';
@@ -12,11 +16,13 @@ type LoginType = Record<FieldType, {
     isError: boolean
 }>;
 
+const initialState: LoginType = {
+    email: {value: "", isError: true},
+    password: {value: "", isError: true}
+};
+
 export default function LoginComponent() {
-    const initialState: LoginType = {
-        email: {value: "", isError: true},
-        password: {value: "", isError: true}
-    };
+    const auth = useContext(AuthContext);
     const [formData, setFormData] = useState<LoginType>(initialState);
     const [disabled, setDisabled] = useState<boolean>(false);
     const [isShow, setIsShow] = useState<boolean>(false);
@@ -54,7 +60,7 @@ export default function LoginComponent() {
 
     const submit = (event: any) => {
         event.preventDefault();
-        alert(state.mode);
+        auth && auth.authDispatch({type: UserAction.LOGIN, data: {user: "lorena", token: "xxx"}});
         return false;
     };
 

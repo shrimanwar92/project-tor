@@ -1,43 +1,29 @@
-import React from "react";
+import React, {useContext} from "react";
 import Box from "@material-ui/core/Box";
 import './header.less';
-import logo from '../../../logo.svg';
-import {Link} from 'react-router-dom';
-import Button from '@material-ui/core/Button';
+import {AuthContext, UserAction} from "shared/services/auth/auth-context";
+import UnauthenticatedHeader from "shared/components/header/unauthenticated-header";
+import AuthenticatedHeader from "shared/components/header/authenticated-header";
 
-interface NavListType {
+export interface NavListType {
     url: string,
     title: string,
-    isButton: boolean
+    isButton: boolean,
+    className?: string
 }
 
 export default function Header() {
-    const navs: NavListType[] = [
-        {url: '/login', title: 'Log in', isButton: false},
-        {url: '/register', title: 'Get started', isButton: true}
-    ];
+    const auth = useContext(AuthContext);
+
+    const onLogoutClicked = () => {
+        alert('logout');
+        auth && auth.authDispatch({type: UserAction.LOGOUT});
+    };
 
     return(
         <Box className={'tor-header__container'}>
             <Box className={'tor-header__sub-container'}>
-                <Box className={'tor-header__left'}>
-                    <Link to="/">
-                        <img src={logo} className="tor-header__logo-image" alt="logo" />
-                    </Link>
-                </Box>
-                <Box className={'tor-header__right'}>
-                    {navs.map(nav => (
-                        nav.isButton
-                                ? (<Link to={nav.url}>
-                                        <Button size="medium" variant="contained" color="secondary">
-                                            {nav.title}
-                                        </Button>
-                                    </Link>)
-                                :   (<span>
-                                        <Link to={nav.url}>{nav.title}</Link>
-                                    </span>)
-                    ))}
-                </Box>
+                {auth && auth.authState.isAuthenticated ? <AuthenticatedHeader onLogout={onLogoutClicked} /> : <UnauthenticatedHeader />}
             </Box>
         </Box>
     );
