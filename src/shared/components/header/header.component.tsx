@@ -16,15 +16,12 @@ export default function Header() {
     const auth = useContext(AuthContext);
 
     const onLogoutClicked = () => {
-        alert('logout');
         auth && auth.authDispatch({type: UserAction.LOGOUT});
     };
 
     return(
         <Box className={'tor-header__container'}>
-            <Box className={'tor-header__sub-container'}>
-                {auth && auth.authState.isAuthenticated ? <AuthenticatedHeader onLogout={onLogoutClicked} /> : <UnauthenticatedHeader />}
-            </Box>
+            {auth && auth.authState.isAuthenticated ? <AuthenticatedHeader onLogout={onLogoutClicked} /> : <UnauthenticatedHeader />}
         </Box>
     );
 }

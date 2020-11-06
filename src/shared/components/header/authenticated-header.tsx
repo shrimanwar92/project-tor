@@ -15,7 +15,7 @@ export default function AuthenticatedHeader(props: AuthenticatedHeaderProps) {
     ];
 
     return(
-        <>
+        <Box className={'tor-header__sub-container'} data-testid={"authenticated-header"}>
             <Box className={'tor-header__left'}>
                 <Link to="/">
                     <img src={logo} className="tor-header__logo-image" alt="logo" />
@@ -25,22 +25,22 @@ export default function AuthenticatedHeader(props: AuthenticatedHeaderProps) {
                 {navs.map(nav => (
                     nav.isButton
                         ?
-                        (<Link to={nav.url}>
+                        (<Link key={nav.title} to={nav.url}>
                             <Button size="medium" variant="contained" color="secondary">
                                 {nav.title}
                             </Button>
                         </Link>)
                         :
-                        (<span>
+                        (<span key={nav.title}>
                             <Link to={nav.url}>{nav.title}</Link>
                         </span>)
                 ))}
                 <Link to={'#'}>
-                    <Button onClick={props.onLogout} size="medium" variant="contained" color="secondary" className={"tor-header__logout"}>
+                    <Button data-testid={"logout"} onClick={props.onLogout} size="medium" variant="contained" color="secondary" className={"tor-header__logout"}>
                         Logout
                     </Button>
                 </Link>
             </Box>
-        </>
+        </Box>
     );
 }

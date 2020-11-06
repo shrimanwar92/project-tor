@@ -1,4 +1,3 @@
-import {render, screen, fireEvent, cleanup} from '@testing-library/react';
 import {authReducer, initialState} from "shared/services/auth/auth-context";
 
 describe("AuthContext", () => {

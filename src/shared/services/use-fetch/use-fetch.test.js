@@ -31,4 +31,9 @@ describe("UseFetchHook", () => {
         await waitForNextUpdate();
         expect(result.current).toMatchObject({"isLoading": false, error: "some error"});
     });
+
+    it("should throw error if url is not present", async () => {
+        const { result } = renderHook(() => useFetch());
+        expect(result.current.error).toBe("Please provide a valid url");
+    });
 });

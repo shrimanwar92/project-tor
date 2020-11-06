@@ -13,7 +13,7 @@ function App() {
         if(user && token) {
             authDispatch({type: Action.LOGIN, data: {user, token}});
         }
-    }, []);
+    }, [user, token]);
 
     return (
         <AuthContext.Provider value={{authState, authDispatch}}>

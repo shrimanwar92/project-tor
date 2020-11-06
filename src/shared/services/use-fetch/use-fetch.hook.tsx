@@ -19,7 +19,6 @@ type Action<T> =
     | { type: FetchState.FETCH_ERROR, error: string };
 
 export default function useFetch<T>(url: string) {
-
     const initialState: State<T> = {
         isLoading: false,
         data: [],
@@ -34,12 +33,14 @@ export default function useFetch<T>(url: string) {
                 return { ...initialState, isLoading: false, data: action.data };
             case FetchState.FETCH_ERROR:
                 return { ...initialState, isLoading: false, error: action.error };
-            default:
-                return state;
         }
     }, initialState);
 
     useEffect(() => {
+        if(!url) {
+            dispatch({ type: FetchState.FETCH_ERROR, error: "Please provide a valid url" });
+        }
+
         let cancelRequest = false;
 
         const fetchData = async () => {
@@ -54,7 +55,7 @@ export default function useFetch<T>(url: string) {
             }
         };
 
-        fetchData();
+        url && fetchData();
 
         return function cleanup() {
             cancelRequest = true;

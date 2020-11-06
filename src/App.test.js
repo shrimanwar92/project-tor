@@ -1,10 +1,6 @@
-import React, {useReducer} from 'react';
-import {render, screen, fireEvent, cleanup} from '@testing-library/react';
+import React from 'react';
+import {render, screen} from '@testing-library/react';
 import App from "App";
-//import AuthenticatedRoutes from "routes/authenticated-routes";
-import UnauthenticatedRoutes from "routes/unauthenticated-routes";
-import { renderHook, act } from '@testing-library/react-hooks';
-import {authReducer, initialState} from "shared/services/auth/auth-context";
 import {CurrentUser} from "shared/services/current-user/current-user.service";
 
 describe("App", () => {
@@ -12,15 +8,15 @@ describe("App", () => {
         const spy = jest.spyOn(CurrentUser, "getUser").mockReturnValueOnce({user: "test", token: "123axc"});
         render(<App />);
         expect(spy).toHaveBeenCalled();
-        expect(screen.queryByText("Login")).toBeNull();
-        expect(screen.queryByText("Logout")).toBeVisible();
+        expect(screen.queryByTestId("authenticated-header")).toBeVisible();
+        expect(screen.queryByTestId("unauthenticated-header")).toBeNull();
     });
 
     it('should show un-authenticated route header on failed login', () => {
         const spy = jest.spyOn(CurrentUser, "getUser").mockReturnValueOnce({user: "", token: ""});
         render(<App />);
         expect(spy).toHaveBeenCalled();
-        expect(screen.queryByText("Login")).toBeVisible();
-        expect(screen.queryByText("Logout")).toBeNull();
+        expect(screen.queryByTestId("authenticated-header")).toBeNull();
+        expect(screen.queryByTestId("unauthenticated-header")).toBeVisible();
     });
 });
