@@ -22,7 +22,7 @@ export default function RegisterUserComponent() {
     };
 
     const [formData, setFormData] = useState<RegisterUserType>(initialState);
-    const [disabled, setDisabled] = useState<boolean>(false);
+    const [disabled, setDisabled] = useState<boolean>(true); // save button should be disabled by default
 
     const isDisabled = useCallback(() => {
         return Object.keys(formData).some((key) => (formData[key as keyof RegisterUserType]).isError);

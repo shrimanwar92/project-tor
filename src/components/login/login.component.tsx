@@ -24,7 +24,7 @@ const initialState: LoginType = {
 export default function LoginComponent() {
     const auth = useContext(AuthContext);
     const [formData, setFormData] = useState<LoginType>(initialState);
-    const [disabled, setDisabled] = useState<boolean>(false);
+    const [disabled, setDisabled] = useState<boolean>(true); // save button should be disabled by default
     const [isShow, setIsShow] = useState<boolean>(false);
     const [state, dispatch] = useMode();
 
