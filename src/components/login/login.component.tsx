@@ -1,14 +1,15 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import './login.less';
 import InputWithValidator, {InputValidatorResponse} from "shared/components/input-validator/input-validator.component";
-import Link from "@material-ui/core/Link";
-import useMode, {Mode} from "./use-login-mode.hook";
+import useMode from "./use-login-mode.hook";
 import {AuthContext, UserAction} from "shared/services/auth/auth-context";
-
+import GoogleLoginComponent from "components/login/google-login/google-login.component";
+import {Link} from "react-router-dom";
+import {useAlert, PageAlert, AlertType} from "shared/components/page-alert";
 
 type FieldType = 'email' | 'password';
 type LoginType = Record<FieldType, {
@@ -24,20 +25,14 @@ const initialState: LoginType = {
 export default function LoginComponent() {
     const auth = useContext(AuthContext);
     const [formData, setFormData] = useState<LoginType>(initialState);
-    const [disabled, setDisabled] = useState<boolean>(true); // save button should be disabled by default
+    const [disabled, setDisabled] = useState<boolean>(true); // Login button should be disabled by default
     const [isShow, setIsShow] = useState<boolean>(false);
-    const [state, dispatch] = useMode();
-
-    const isDisabled = useCallback(() => {
-        if(state.mode === Mode.LOGIN) {
-            return formData.email.isError || formData.password.isError;
-        }
-        return formData.email.isError;
-    }, [formData.email.isError, formData.password.isError, state.mode]);
+    // const [state, dispatch] = useMode();
+    const [errorState, errorDispatch] = useAlert();
 
     useEffect(() => {
-        setDisabled(isDisabled);
-    }, [isDisabled]);
+        setDisabled(formData.email.isError || formData.password.isError);
+    }, [formData.email.isError, formData.password.isError, errorState.errorMessage]);
 
     const onChangeInput = (data: InputValidatorResponse) => {
         setFormData({
@@ -48,20 +43,20 @@ export default function LoginComponent() {
 
     const showPassword = () => setIsShow((prevState) => !prevState);
 
-    const forgotPasswordLinkClicked = () => {
-        setFormData(initialState);
-        dispatch({type: Mode.FORGOT_PASSWORD});
+    const googleLoginSuccess = () => {
+        //TODO:: Handle google login success
     };
 
-    const backToLogin = () => {
-        setFormData(initialState);
-        dispatch({type: Mode.LOGIN});
+    const googleLoginFailure = () => {
+        //TODO:: Handle google login failure
+        errorDispatch({type: AlertType.WARNING, errorMessage: "Google login failure"});
     };
 
-    const submit = (event: any) => {
+    const submit = (event: React.MouseEvent<HTMLButtonElement>) => {
+        //TODO:: Handle submit
         event.preventDefault();
-        auth && auth.authDispatch({type: UserAction.LOGIN, data: {user: "lorena", token: "xxx"}});
-        return false;
+        /*auth && auth.authDispatch({type: UserAction.LOGIN, data: {user: "lorena", token: "xxx"}});
+        return false;*/
     };
 
     const getEmailInput = () => {
@@ -82,10 +77,10 @@ export default function LoginComponent() {
         );
     };
 
-    const getForgotPassword = () => {
+    const getForgotPasswordLink = () => {
         return(
             <Grid item xs={12}>
-                <Link aria-label={'forgot password'} className={`tor-login__forgot-password`} onClick={forgotPasswordLinkClicked}>Forgot password?</Link>
+                <Link to={'/forgot-password'} data-testid={'forgot password'} className={`tor-login__forgot-password`}>Forgot password?</Link>
             </Grid>
         );
     };
@@ -104,19 +99,9 @@ export default function LoginComponent() {
                     }
                     required={true}
                     onChange={onChangeInput} />
-                <div className={`tor-login__show-password`} onClick={showPassword}>
+                <div className={`tor-login__show-password`} onClick={showPassword} aria-label={'show-password'}>
                     {isShow ? <span>Hide</span> : <span>Show</span>}
                 </div>
-            </Grid>
-        );
-    };
-
-    const getBackToLogin = () => {
-        return(
-            <Grid item xs={12} className={`${state.className}__back-to-login`}>
-                <Button aria-label={'back to login'} fullWidth variant="outlined" color="secondary" onClick={backToLogin}>
-                    Back to login
-                </Button>
             </Grid>
         );
     };
@@ -130,43 +115,56 @@ export default function LoginComponent() {
                     fullWidth
                     type="submit"
                     onClick={submit}
-                    className={`${state.className}__submit`}
+                    className={`tor-login__submit`}
                     variant="contained"
                     disabled={disabled}>
-                    {state.buttonText}
+                    Login
                 </Button>
             </Grid>
         );
     };
 
-    const getForm = () => {
+    const get3rdPartyAuthButtons = () => {
         return(
-            <form className={`tor-login__form`} noValidate>
-                <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                        <Grid container spacing={3}>
-                            {getEmailInput()}
-                            {state.mode === Mode.LOGIN ? getPasswordInput() : null}
-                            {state.mode === Mode.LOGIN ? getForgotPassword() : null}
-                        </Grid>
+            <Grid item xs={12} className={'tor-login__3rd-party-auth-buttons'}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <GoogleLoginComponent
+                            onFailure={googleLoginFailure}
+                            onSuccess={googleLoginSuccess} />
                     </Grid>
-                    {getSubmitButton()}
-                    {state.mode === Mode.FORGOT_PASSWORD ? getBackToLogin() : null}
+                    <Grid item xs={12} sm={6}>
+                        <Button fullWidth variant="outlined" color="primary">Sign in with Facebook</Button>
+                    </Grid>
                 </Grid>
-            </form>
+            </Grid>
         );
-    }
+    };
 
 
     return(
-        <div className={'tor-login__main'}>
-            <Container maxWidth={'sm'} className={'tor-login__container'}>
-                <Box className={`tor-login__heading`}>
-                    <span><h2>{state.heading}</h2></span>
-                </Box>
-                {getForm()}
-            </Container>
-        </div>
+        <PageAlert errorMessage={errorState.errorMessage} type={errorState.type}>
+            <div className={'tor-login__main'}>
+                <Container maxWidth={'sm'} className={'tor-login__container'}>
+                    <Box className={`tor-login__heading`}>
+                        <span><h2>Login</h2></span>
+                    </Box>
+                    <form className={`tor-login__form`} noValidate>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <Grid container spacing={3}>
+                                    {getEmailInput()}
+                                    {getPasswordInput()}
+                                    {getForgotPasswordLink()}
+                                </Grid>
+                            </Grid>
+                            {getSubmitButton()}
+                            {get3rdPartyAuthButtons() }
+                        </Grid>
+                    </form>
+                </Container>
+            </div>
+        </PageAlert>
     );
 }
 

@@ -1,11 +1,19 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import LoginComponent from "./login.component";
 import { cleanup } from '@testing-library/react'
+import {BrowserRouter as Router} from "react-router-dom";
 
 describe("LoginComponent", () => {
 
     afterEach(cleanup);
+    beforeEach(() => {
+        render(
+            <Router>
+                <LoginComponent />
+            </Router>
+        );
+    });
 
     const setInputValueAndBlur = (label, val) => {
         const input = screen.getByLabelText(label);
@@ -17,15 +25,12 @@ describe("LoginComponent", () => {
     };
 
     it("should properly initialize the component", async () => {
-        const component = render(<LoginComponent></LoginComponent>);
-        expect(component).toBeDefined();
         expect(screen.queryByLabelText("email")).toBeVisible();
         expect(screen.queryByLabelText("password")).toBeVisible();
         expect(screen.queryByLabelText("login")).toBeDisabled();
     });
 
     it("should validate email", async () => {
-        render(<LoginComponent></LoginComponent>);
         setInputValueAndBlur("email", "");
         expect(screen.queryByText("Please enter your email address")).toBeVisible();
 
@@ -36,8 +41,6 @@ describe("LoginComponent", () => {
     });
 
     it("should validate password", async () => {
-        render(<LoginComponent></LoginComponent>);
-
         setInputValueAndBlur("email", "abc@xyz.com");
         setInputValueAndBlur("password", "");
         expect(screen.queryByText("Please enter your password")).toBeVisible();
@@ -48,30 +51,25 @@ describe("LoginComponent", () => {
     });
 
     it("should enable submit button if valid email and password are provided", async () => {
-        render(<LoginComponent></LoginComponent>);
         setInputValueAndBlur("email", "admin@example.com");
         setInputValueAndBlur("password", "admin12345");
         expect(screen.queryByLabelText("login")).not.toBeDisabled();
     });
 
     it("should display password when show is clicked", async () => {
-        const {container} = render(<LoginComponent></LoginComponent>);
-
-        const showPasswordButton = container.querySelector(".tor-login__show-password");
-        const password = container.querySelector(".tor-login__password");
         setInputValueAndBlur("password", "test123");
 
-        fireEvent.click(showPasswordButton);
-        expect(showPasswordButton.textContent).toBe("Hide");
-        expect(password.getAttribute('type')).toBe("text");
+        fireEvent.click(screen.queryByLabelText("show-password"));
+        expect(screen.queryByLabelText("show-password").textContent).toBe("Hide");
+        expect(screen.queryByLabelText("password").getAttribute('type')).toBe("text");
 
-        fireEvent.click(showPasswordButton);
-        expect(showPasswordButton.textContent).toBe("Show");
-        expect(password.getAttribute('type')).toBe("password");
+        fireEvent.click(screen.queryByLabelText("show-password"));
+        expect(screen.queryByLabelText("show-password").textContent).toBe("Show");
+        expect(screen.queryByLabelText("password").getAttribute('type')).toBe("password");
     });
 
-    it("should be able to toggel between login and forgot password screen", async () => {
-        const {container} = render(<LoginComponent></LoginComponent>);
+    it("should be able to toggle between login and forgot password screen", async () => {
+        /*const {container} = render(<LoginComponent></LoginComponent>);
         const heading = container.querySelector(".tor-login__heading");
         const submit = container.querySelector(".tor-login__submit");
 
@@ -91,6 +89,9 @@ describe("LoginComponent", () => {
         expect(screen.queryByLabelText("back to login")).toBeNull();
         expect(screen.queryByLabelText("email")).toBeVisible();
         expect(screen.queryByLabelText("password")).toBeVisible();
-        expect(submit.textContent.toLowerCase()).toBe("log in");
+        expect(submit.textContent.toLowerCase()).toBe("log in");*/
+        fireEvent.click(screen.getByText("Forgot password?"));
+        expect(screen.getByText("Forgot password?").closest('a')).toHaveAttribute('href', '/forgot-password');
+        await waitFor(() => expect(screen.queryByLabelText("forgot-password-heading").textContent).toBe("as"));
     });
 });

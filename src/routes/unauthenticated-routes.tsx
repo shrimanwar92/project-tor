@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import Header from "shared/components/header/header.component";
 import LoginComponent from "components/login/login.component";
 import RegisterUserComponent from "components/login/register-user/register-user.component";
+import ForgotPasswordComponent from "components/login/forgot-password/forgot-password.component";
 
 export default function UnauthenticatedRoutes() {
     return(
@@ -13,6 +14,10 @@ export default function UnauthenticatedRoutes() {
                 <Route
                     path={'/login'}
                     component={() => <LoginComponent></LoginComponent>}>
+                </Route>
+                <Route
+                    path={'/forgot-password'}
+                    component={() => <ForgotPasswordComponent></ForgotPasswordComponent>}>
                 </Route>
                 <Route
                     path={'/register'}
